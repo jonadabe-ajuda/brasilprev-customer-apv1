@@ -2,9 +2,8 @@
 
 
 Teste API.
-No endpoint 
-local : localhost/auth
-EC2 Amazon : http://172.107.45.210:8080
+http://<host>8080/swagger-ui.html#/
+EC2 Amazon : 172.107.45.210
   Ação:POST
   {
     "email" : "user@brasilprev.com.br",
