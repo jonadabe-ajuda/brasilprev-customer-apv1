@@ -1,7 +1,6 @@
 package br.com.brasilprev.register.customers.controller;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -17,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import br.com.brasilprev.application.customers.command.DeleteCustomer;
 import br.com.brasilprev.application.customers.command.RecoverCustomerAll;
 import br.com.brasilprev.application.customers.command.RecoverCustomerCPF;
 import br.com.brasilprev.application.customers.command.SaveCustomer;
+import br.com.brasilprev.application.customers.command.UpdateCustomer;
 import br.com.brasilprev.application.customers.dto.CustomerDTO;
 import br.com.brasilprev.infra.customers.RepositoryCustomersMysql;
 import br.com.brasilprev.register.customers.form.CustomersForm;
@@ -33,9 +34,17 @@ public class CustomersController {
 	@PostMapping
 	public ResponseEntity<CustomerDTO> insert(@RequestBody @Valid CustomersForm customersForm, UriComponentsBuilder urBuilder) {
 		
-		CustomerDTO customerDTO = new CustomerDTO();
+		
 		
 		SaveCustomer saveCustomer = new SaveCustomer(new RepositoryCustomersMysql("brasil-prev"));
+		CustomerDTO customerDTO = new CustomerDTO(customersForm.getName(), 
+												  customersForm.getCpf(),
+												  customersForm.getStreet(),
+												  customersForm.getNumber(),
+												  customersForm.getDistrict(),
+												  customersForm.getCity(),
+												  customersForm.getState(), 
+												  customersForm.getZipcode());
 		saveCustomer.execute(customerDTO);
 		
 		URI uri = urBuilder.path("/customers/{cpf}").buildAndExpand(customerDTO.getCpf()).toUri();
@@ -64,12 +73,19 @@ public class CustomersController {
 	}
 	
 	@PutMapping("/{cpf}")
-	public ResponseEntity<CustomerDTO> update(@RequestBody @Valid CustomersUpdateForm customersForm, UriComponentsBuilder urBuilder) {
+	public ResponseEntity<CustomerDTO> update(@RequestBody @Valid CustomersUpdateForm customersUpdateForm, @PathVariable(required = true) String cpf, UriComponentsBuilder urBuilder) {
 		
-		CustomerDTO customerDTO = new CustomerDTO();
 		
-		SaveCustomer saveCustomer = new SaveCustomer(new RepositoryCustomersMysql("brasil-prev"));
-		saveCustomer.execute(customerDTO);
+		UpdateCustomer updateCustomer = new UpdateCustomer(new RepositoryCustomersMysql("brasil-prev"));
+		CustomerDTO customerDTO = new CustomerDTO(customersUpdateForm.getName(),
+													cpf, 
+													customersUpdateForm.getStreet(),
+													customersUpdateForm.getNumber(),
+													customersUpdateForm.getDistrict(),
+													customersUpdateForm.getCity(),
+													customersUpdateForm.getState(), 
+													customersUpdateForm.getZipcode());		
+		updateCustomer.execute(customerDTO);
 		
 		
 		URI uri = urBuilder.path("/customers/{cpf}").buildAndExpand(customerDTO.getCpf()).toUri();
@@ -80,7 +96,13 @@ public class CustomersController {
 	@DeleteMapping("/{cpf}")
 	public ResponseEntity<?> delete(@PathVariable(required = true) String cpf) {
 	
-		return ResponseEntity.notFound().build();		
+		DeleteCustomer deleteCustomerCPF = new DeleteCustomer(new RepositoryCustomersMysql("brasil-prev"));
+		CustomerDTO customerDTO = new CustomerDTO();
+		customerDTO.setCpf(cpf);
+		deleteCustomerCPF.execute(customerDTO);
+		
+		return ResponseEntity.ok(customerDTO);
+
 		
 	}
 	

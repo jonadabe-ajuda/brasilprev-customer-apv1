@@ -16,6 +16,9 @@ public class CustomersForm {
 	@NotNull @NotEmpty @Length(min = 5, max = 100)
 	private String street;
 	
+	@NotNull
+	private Integer number;
+	
 	@NotNull @NotEmpty @Length(min = 5, max = 100)
 	private String district;
 
@@ -30,6 +33,10 @@ public class CustomersForm {
 
 	public String getCpf() {
 		return cpf;
+	}
+	
+	public Integer getNumber() {
+		return number;
 	}
 
 	public String getName() {

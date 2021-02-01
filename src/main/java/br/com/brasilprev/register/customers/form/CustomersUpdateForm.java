@@ -13,6 +13,9 @@ public class CustomersUpdateForm {
 	@NotNull @NotEmpty @Length(min = 5, max = 100)
 	private String street;
 	
+	@NotNull
+	private Integer number;
+	
 	@NotNull @NotEmpty @Length(min = 5, max = 100)
 	private String district;
 
@@ -24,10 +27,34 @@ public class CustomersUpdateForm {
 	
 	@NotNull @NotEmpty @Length(min = 8, max = 8)
 	private String zipcode;
-	
-	
-	
-	
+
+	public String getName() {
+		return name;
+	}
+
+	public String getStreet() {
+		return street;
+	}
+
+	public Integer getNumber() {
+		return number;
+	}
+
+	public String getDistrict() {
+		return district;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public String getZipcode() {
+		return zipcode;
+	}
 	
 	
 }
